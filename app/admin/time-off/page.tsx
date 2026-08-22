@@ -5,7 +5,7 @@ import { PageTransition } from '@/components/dayflow/animations/PageTransition'
 import { PageHeader } from '@/components/dayflow/PageHeader'
 import { StatusChip } from '@/components/dayflow/StatusChip'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, X, User, Calendar, MessageSquare, AlertCircle } from 'lucide-react'
+import { Check, X, User, Calendar, MessageSquare, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate, getInitials } from '@/lib/utils'
 
@@ -13,8 +13,9 @@ export default function AdminTimeOffPage() {
   const [activeTab, setActiveTab] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING')
   const [requests, setRequests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [actionId, setActionId] = useState<string | null>(null)
 
-  // Review Modal State (Screen 11 in wireframe)
+  // Review Modal State
   const [selectedRequest, setSelectedRequest] = useState<any>(null)
   const [reviewComment, setReviewComment] = useState('')
   const [reviewing, setReviewing] = useState(false)
@@ -38,46 +39,50 @@ export default function AdminTimeOffPage() {
     fetchRequests()
   }, [activeTab])
 
-  const handleReviewAction = async (status: 'APPROVED' | 'REJECTED') => {
-    if (!selectedRequest) return
-    setReviewing(true)
-
+  const handleDirectReview = async (requestId: string, status: 'APPROVED' | 'REJECTED', comment?: string) => {
+    setActionId(requestId)
     try {
-      const res = await fetch(`/api/leave/${selectedRequest.id}/review`, {
+      const res = await fetch(`/api/leave/${requestId}/review`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status,
-          reviewComment,
+          reviewComment: comment || (status === 'APPROVED' ? 'Approved by HR' : 'Rejected by HR'),
         }),
       })
 
       const json = await res.json()
 
       if (json.success) {
-        toast.success(`Leave request ${status.toLowerCase()}!`)
-        setSelectedRequest(null)
-        setReviewComment('')
+        toast.success(`Leave request ${status.toLowerCase()} successfully!`)
+        if (selectedRequest?.id === requestId) setSelectedRequest(null)
         fetchRequests()
       } else {
         toast.error(json.error || 'Failed to update leave request')
       }
     } catch {
-      toast.error('Review failed')
+      toast.error('Leave review action failed')
     } finally {
-      setReviewing(false)
+      setActionId(null)
     }
+  }
+
+  const handleModalReviewAction = async (status: 'APPROVED' | 'REJECTED') => {
+    if (!selectedRequest) return
+    setReviewing(true)
+    await handleDirectReview(selectedRequest.id, status, reviewComment)
+    setReviewing(false)
   }
 
   return (
     <PageTransition>
       <PageHeader
-        title="Leave Requests & Approvals"
+        title="HR Leave Approvals & Time-Off Management"
         description="Review, approve, or reject employee leave applications."
       />
 
-      {/* Tabs (Matching wireframe screen 10) */}
-      <div className="flex border-b border-df-border mb-6">
+      {/* Tabs */}
+      <div className="flex border-b border-slate-200 mb-6">
         {[
           { key: 'PENDING', label: 'Pending Approvals' },
           { key: 'ALL', label: 'All Requests' },
@@ -87,10 +92,10 @@ export default function AdminTimeOffPage() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as any)}
-            className={`px-5 py-3 text-xs font-semibold border-b-2 transition-all ${
+            className={`px-5 py-3 text-xs font-bold border-b-2 transition-all ${
               activeTab === tab.key
-                ? 'border-royal-purple text-royal-purple'
-                : 'border-transparent text-zinc-grey hover:text-charcoal'
+                ? 'border-purple-600 text-purple-700 bg-purple-50/40'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             {tab.label}
@@ -98,63 +103,100 @@ export default function AdminTimeOffPage() {
         ))}
       </div>
 
-      {/* Table (Matching wireframe screen 10) */}
-      <div className="bg-white rounded-2xl border border-df-border shadow-sm overflow-hidden p-4">
+      {/* Table */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-4">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="bg-mist-grey/60 border-b border-df-border text-zinc-grey uppercase tracking-wider">
-              <th className="px-4 py-3 font-semibold">Employee</th>
-              <th className="px-4 py-3 font-semibold">Leave Type</th>
-              <th className="px-4 py-3 font-semibold">Dates</th>
-              <th className="px-4 py-3 font-semibold">Days</th>
-              <th className="px-4 py-3 font-semibold">Reason</th>
-              <th className="px-4 py-3 font-semibold">Status</th>
-              <th className="px-4 py-3 font-semibold">Action</th>
+            <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-bold">
+              <th className="px-4 py-3">Employee</th>
+              <th className="px-4 py-3">Leave Type</th>
+              <th className="px-4 py-3">Dates</th>
+              <th className="px-4 py-3">Days</th>
+              <th className="px-4 py-3">Reason</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-center">HR Quick Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-df-border/60">
-            {requests.length === 0 ? (
+          <tbody className="divide-y divide-slate-200/70">
+            {loading ? (
               <tr>
-                <td colSpan={7} className="text-center py-8 text-xs text-zinc-grey">
+                <td colSpan={7} className="text-center py-8 text-xs text-slate-500">
+                  <Loader2 className="w-5 h-5 animate-spin mx-auto text-purple-600 mb-2" />
+                  Loading leave applications...
+                </td>
+              </tr>
+            ) : requests.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-8 text-xs text-slate-500 font-medium">
                   No leave requests found in this view.
                 </td>
               </tr>
             ) : (
               requests.map((r) => (
-                <tr key={r.id} className="hover:bg-cool-grey/60">
-                  <td className="px-4 py-3 font-semibold text-charcoal flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-lavender text-royal-purple font-bold flex items-center justify-center text-[10px]">
-                      {r.user?.profile?.firstName?.[0]}
+                <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-slate-900 flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-xs">
+                      {r.user?.profile?.firstName?.[0] || 'E'}
                     </div>
                     <div>
-                      <div>{r.user?.profile?.firstName} {r.user?.profile?.lastName}</div>
-                      <div className="text-[10px] text-zinc-grey font-mono">{r.user?.employeeId}</div>
+                      <div className="font-bold text-slate-900">{r.user?.profile?.firstName} {r.user?.profile?.lastName}</div>
+                      <div className="text-[10px] text-slate-500 font-mono">{r.user?.employeeId}</div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 font-medium text-charcoal">{r.leaveType}</td>
-                  <td className="px-4 py-3 text-zinc-grey">
+                  <td className="px-4 py-3.5 font-bold text-slate-800">
+                    <span className="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                      {r.leaveType}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5 text-slate-600 font-medium">
                     {formatDate(r.startDate)} - {formatDate(r.endDate)}
                   </td>
-                  <td className="px-4 py-3 font-mono font-medium">{r.totalDays}</td>
-                  <td className="px-4 py-3 text-zinc-grey max-w-xs truncate">{r.reason}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 font-mono font-bold text-slate-900">{r.totalDays} Days</td>
+                  <td className="px-4 py-3.5 text-slate-600 font-medium max-w-xs truncate">{r.reason}</td>
+                  <td className="px-4 py-3.5">
                     <StatusChip status={r.status} size="sm" />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     {r.status === 'PENDING' ? (
-                      <button
-                        onClick={() => setSelectedRequest(r)}
-                        className="bg-royal-purple text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-deep-violet transition-colors"
-                      >
-                        Review
-                      </button>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleDirectReview(r.id, 'APPROVED')}
+                          disabled={actionId === r.id}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-xs flex items-center gap-1 text-[11px] disabled:opacity-50"
+                        >
+                          {actionId === r.id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              Approve
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleDirectReview(r.id, 'REJECTED')}
+                          disabled={actionId === r.id}
+                          className="bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-xs flex items-center gap-1 text-[11px] disabled:opacity-50"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                          Reject
+                        </button>
+                        <button
+                          onClick={() => setSelectedRequest(r)}
+                          className="text-slate-500 hover:text-slate-900 font-bold underline text-[11px] ml-1"
+                        >
+                          Details
+                        </button>
+                      </div>
                     ) : (
-                      <button
-                        onClick={() => setSelectedRequest(r)}
-                        className="text-xs font-semibold text-royal-purple hover:underline"
-                      >
-                        Details
-                      </button>
+                      <div className="text-center">
+                        <button
+                          onClick={() => setSelectedRequest(r)}
+                          className="text-xs font-bold text-purple-700 hover:underline"
+                        >
+                          View Details
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>
@@ -164,12 +206,12 @@ export default function AdminTimeOffPage() {
         </table>
       </div>
 
-      {/* Leave Approval Modal (Screen 11 in wireframe) */}
+      {/* Leave Approval Detail Modal */}
       <AnimatePresence>
         {selectedRequest && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -177,33 +219,33 @@ export default function AdminTimeOffPage() {
             />
 
             <motion.div
-              className="relative bg-white rounded-3xl p-6 border border-df-border shadow-2xl w-full max-w-lg z-10 space-y-6"
+              className="relative bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-lg z-10 space-y-6"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-df-border">
-                <h3 className="font-bold text-charcoal text-lg">Leave Request Details</h3>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                <h3 className="font-bold text-slate-900 text-base">Leave Application Review</h3>
                 <button
                   onClick={() => setSelectedRequest(null)}
-                  className="p-1 rounded-lg text-zinc-grey hover:text-charcoal"
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-800"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Employee Summary Card */}
-              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-lavender/50 border border-purple-200">
-                <div className="w-10 h-10 rounded-full bg-royal-purple text-white font-bold flex items-center justify-center text-sm">
+              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-purple-50 border border-purple-200">
+                <div className="w-10 h-10 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center text-sm">
                   {getInitials(selectedRequest.user?.profile?.firstName || 'E', selectedRequest.user?.profile?.lastName || 'P')}
                 </div>
                 <div>
-                  <div className="font-bold text-charcoal text-sm">
+                  <div className="font-bold text-slate-900 text-sm">
                     {selectedRequest.user?.profile?.firstName} {selectedRequest.user?.profile?.lastName}
                   </div>
-                  <div className="text-xs text-zinc-grey">
+                  <div className="text-xs text-slate-600 font-medium">
                     {selectedRequest.user?.profile?.department?.name || 'Engineering'} • {selectedRequest.user?.employeeId}
                   </div>
                 </div>
@@ -211,22 +253,22 @@ export default function AdminTimeOffPage() {
 
               {/* Details List */}
               <div className="space-y-2 text-xs">
-                <div className="flex justify-between py-1.5 border-b border-df-border">
-                  <span className="text-zinc-grey">Leave Type</span>
-                  <span className="font-bold text-charcoal">{selectedRequest.leaveType} Leave</span>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Leave Type</span>
+                  <span className="font-bold text-slate-900">{selectedRequest.leaveType} Leave</span>
                 </div>
-                <div className="flex justify-between py-1.5 border-b border-df-border">
-                  <span className="text-zinc-grey">Duration</span>
-                  <span className="font-semibold text-charcoal">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Duration</span>
+                  <span className="font-bold text-slate-900">
                     {formatDate(selectedRequest.startDate)} – {formatDate(selectedRequest.endDate)} ({selectedRequest.totalDays} Days)
                   </span>
                 </div>
-                <div className="flex justify-between py-1.5 border-b border-df-border">
-                  <span className="text-zinc-grey">Reason</span>
-                  <span className="font-medium text-charcoal max-w-xs text-right">{selectedRequest.reason}</span>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Reason</span>
+                  <span className="font-semibold text-slate-800 max-w-xs text-right">{selectedRequest.reason}</span>
                 </div>
-                <div className="flex justify-between py-1.5">
-                  <span className="text-zinc-grey">Current Status</span>
+                <div className="flex justify-between py-2">
+                  <span className="text-slate-500 font-medium">Status</span>
                   <StatusChip status={selectedRequest.status} size="sm" />
                 </div>
               </div>
@@ -234,14 +276,14 @@ export default function AdminTimeOffPage() {
               {/* Comments Input (for approval/rejection) */}
               {selectedRequest.status === 'PENDING' && (
                 <div>
-                  <label className="block text-xs font-semibold text-charcoal mb-1">
-                    Reviewer Comments (Optional)
+                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                    HR Reviewer Comments (Optional)
                   </label>
                   <textarea
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="Looks good. Take care!"
-                    className="w-full bg-mist-grey/60 text-xs px-3 py-2 rounded-xl border border-df-border h-20"
+                    placeholder="E.g., Approved. Please transfer pending sprint items..."
+                    className="w-full bg-slate-50 text-xs text-slate-900 p-3 rounded-xl border border-slate-200 h-20 font-medium focus:outline-none focus:border-purple-600"
                   />
                 </div>
               )}
@@ -250,24 +292,24 @@ export default function AdminTimeOffPage() {
               {selectedRequest.status === 'PENDING' ? (
                 <div className="flex items-center gap-3 pt-2">
                   <button
-                    onClick={() => handleReviewAction('REJECTED')}
+                    onClick={() => handleModalReviewAction('REJECTED')}
                     disabled={reviewing}
-                    className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5"
+                    className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/20 disabled:opacity-50"
                   >
-                    <X className="w-4 h-4" />
-                    Reject Request
+                    {reviewing ? <Loader2 className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
+                    Reject Application
                   </button>
                   <button
-                    onClick={() => handleReviewAction('APPROVED')}
+                    onClick={() => handleModalReviewAction('APPROVED')}
                     disabled={reviewing}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-green-500/20"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 disabled:opacity-50"
                   >
-                    <Check className="w-4 h-4" />
-                    Approve Request
+                    {reviewing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Approve Application
                   </button>
                 </div>
               ) : (
-                <div className="text-center text-xs text-zinc-grey pt-2">
+                <div className="text-center text-xs text-slate-500 font-medium pt-2">
                   Reviewed on {formatDate(selectedRequest.updatedAt || new Date())}
                 </div>
               )}
