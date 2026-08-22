@@ -19,14 +19,24 @@ import { formatTime, formatWorkingHours, getGreeting } from '@/lib/utils'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
+import { DEMO_LEAVE_BALANCE } from '@/lib/demoData'
+
 export default function MyDayPage() {
   const { data: session } = useSession()
   const [todayRecord, setTodayRecord] = useState<any>(null)
-  const [leaveBalance, setLeaveBalance] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [leaveBalance, setLeaveBalance] = useState<any>(DEMO_LEAVE_BALANCE)
+  const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
 
-  const userName = session?.user?.name || 'Employee'
+  // Retrieve user name from session or localStorage fallback
+  let localUser: any = null
+  if (typeof window !== 'undefined') {
+    try {
+      localUser = JSON.parse(localStorage.getItem('dayflow_user') || 'null')
+    } catch {}
+  }
+
+  const userName = session?.user?.name || (localUser?.email ? localUser.email.split('@')[0].replace('.', ' ') : 'Arun Karthik')
   const firstName = userName.split(' ')[0]
   const greeting = getGreeting()
 
@@ -39,10 +49,11 @@ export default function MyDayPage() {
       const attJson = await attRes.json()
       const balJson = await balRes.json()
 
-      if (attJson.success) setTodayRecord(attJson.data)
-      if (balJson.success) setLeaveBalance(balJson.data)
+      if (attJson.success && attJson.data) setTodayRecord(attJson.data)
+      if (balJson.success && balJson.data) setLeaveBalance(balJson.data)
     } catch {
-      toast.error('Failed to load workday status')
+      // Fallback to demo leave balance on static hosting
+      setLeaveBalance(DEMO_LEAVE_BALANCE)
     } finally {
       setLoading(false)
     }

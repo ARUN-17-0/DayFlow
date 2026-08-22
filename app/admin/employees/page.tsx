@@ -9,9 +9,11 @@ import { Search, Plus, UserPlus, Grid, List } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 
+import { DEMO_EMPLOYEES } from '@/lib/demoData'
+
 export default function EmployeesListPage() {
-  const [employees, setEmployees] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [employees, setEmployees] = useState<any[]>(DEMO_EMPLOYEES)
+  const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [view, setView] = useState<'grid' | 'table'>('grid')
 
@@ -22,11 +24,41 @@ export default function EmployeesListPage() {
         : '/api/employees'
       const res = await fetch(url)
       const json = await res.json()
-      if (json.success) {
-        setEmployees(json.data.items || [])
+      if (json.success && json.data.items?.length > 0) {
+        setEmployees(json.data.items)
+      } else {
+        // filter demo employees if searching
+        if (search) {
+          const s = search.toLowerCase()
+          setEmployees(
+            DEMO_EMPLOYEES.filter(
+              (e) =>
+                e.profile.firstName.toLowerCase().includes(s) ||
+                e.profile.lastName.toLowerCase().includes(s) ||
+                e.email.toLowerCase().includes(s) ||
+                e.employeeId.toLowerCase().includes(s)
+            )
+          )
+        } else {
+          setEmployees(DEMO_EMPLOYEES)
+        }
       }
     } catch {
-      toast.error('Failed to load employees')
+      // Fallback to static demo data on GitHub Pages
+      if (search) {
+        const s = search.toLowerCase()
+        setEmployees(
+          DEMO_EMPLOYEES.filter(
+            (e) =>
+              e.profile.firstName.toLowerCase().includes(s) ||
+              e.profile.lastName.toLowerCase().includes(s) ||
+              e.email.toLowerCase().includes(s) ||
+              e.employeeId.toLowerCase().includes(s)
+          )
+        )
+      } else {
+        setEmployees(DEMO_EMPLOYEES)
+      }
     } finally {
       setLoading(false)
     }

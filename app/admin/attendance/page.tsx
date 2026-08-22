@@ -8,17 +8,27 @@ import { Search, Filter, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
 
+const DEMO_ATTENDANCE_ITEMS = [
+  { id: 'a1', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T08:55:00.000Z', checkOut: '2025-08-22T17:45:00.000Z', workingHours: 8.8, status: 'PRESENT', user: { employeeId: 'EMP001', profile: { firstName: 'Priya', lastName: 'Sharma', department: { name: 'Operations' } } } },
+  { id: 'a2', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T09:00:00.000Z', checkOut: '2025-08-22T18:00:00.000Z', workingHours: 9.0, status: 'PRESENT', user: { employeeId: 'EMP002', profile: { firstName: 'Kavitha', lastName: 'Nair', department: { name: 'Human Resources' } } } },
+  { id: 'a3', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T09:22:00.000Z', checkOut: '2025-08-22T18:30:00.000Z', workingHours: 9.1, status: 'PRESENT', user: { employeeId: 'EMP003', profile: { firstName: 'Arun', lastName: 'Karthik', department: { name: 'Engineering' } } } },
+  { id: 'a4', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T08:50:00.000Z', checkOut: '2025-08-22T17:40:00.000Z', workingHours: 8.8, status: 'PRESENT', user: { employeeId: 'EMP004', profile: { firstName: 'Rahul', lastName: 'Kumar', department: { name: 'Engineering' } } } },
+  { id: 'a5', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T09:05:00.000Z', checkOut: '2025-08-22T17:55:00.000Z', workingHours: 8.8, status: 'PRESENT', user: { employeeId: 'EMP005', profile: { firstName: 'Priya', lastName: 'Patel', department: { name: 'Design' } } } },
+  { id: 'a6', date: '2025-08-22T00:00:00.000Z', checkIn: '2025-08-22T08:45:00.000Z', checkOut: '2025-08-22T17:30:00.000Z', workingHours: 8.7, status: 'PRESENT', user: { employeeId: 'EMP006', profile: { firstName: 'Sneha', lastName: 'Balakrishnan', department: { name: 'Marketing' } } } },
+  { id: 'a7', date: '2025-08-22T00:00:00.000Z', checkIn: null, checkOut: null, workingHours: 0, status: 'ON_LEAVE', user: { employeeId: 'EMP007', profile: { firstName: 'Vikram', lastName: 'Singh', department: { name: 'Finance' } } } },
+]
+
 export default function AdminAttendancePage() {
-  const [records, setRecords] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [records, setRecords] = useState<any[]>(DEMO_ATTENDANCE_ITEMS)
+  const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
     fetch('/api/attendance?limit=50')
       .then((r) => r.json())
       .then((res) => {
-        if (res.success && res.data) {
-          setRecords(res.data.items || [])
+        if (res.success && res.data?.items?.length > 0) {
+          setRecords(res.data.items)
         }
       })
       .catch(() => {})
