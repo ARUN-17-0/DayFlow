@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node prisma/switch-db.js && prisma generate && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "prisma": "prisma",
@@ -47,6 +47,7 @@
     "resend": "^4.0.1",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.4",
+    "vercel": "^59.3.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
