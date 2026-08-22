@@ -1,0 +1,133 @@
+================================================================================
+                    DAYFLOW — HACKATHON VIDEO DEMO SCRIPT
+================================================================================
+Target Duration: 2:30 – 3:00 Minutes
+Tone: Energetic, Professional, Confident, Tech-Focused
+Live App URL: https://dayflow-livid-one.vercel.app
+GitHub Repo:  https://github.com/karthika-jg/DayFlow
+
+================================================================================
+DEMO CREDENTIALS FOR RECORDING
+================================================================================
+- Admin:       admin@dayflow.io / Admin@123
+- HR Officer:  hr@dayflow.io / HR@123
+- Employee:    arun.karthik@dayflow.io / Employee@123
+
+================================================================================
+FULL TIMED SCRIPT & VISUAL CUES
+================================================================================
+
+[0:00 - 0:30] SECTION 1: THE HOOK & INTRODUCTION
+--------------------------------------------------------------------------------
+VISUAL CUE:
+- Start with high-energy title card: "DayFlow — Every Workday, Perfectly Aligned."
+- Transition to smooth camera pan over the live Vercel landing/login page.
+- Show login screen with quick role selector badges: Admin, HR Officer, Employee.
+- Click "Sign In as Employee".
+
+VOICEOVER (VO):
+"Modern HR management is broken. Between clunky spreadsheets, delayed payroll, 
+and fragmented attendance tracking, HR teams spend hours on manual admin work. 
+
+Meet DayFlow — a full-stack, enterprise-grade Human Resource Management System 
+built to streamline the entire employee lifecycle into one intuitive, 
+lightning-fast web app."
+
+
+[0:30 - 1:10] SECTION 2: THE EMPLOYEE EXPERIENCE
+--------------------------------------------------------------------------------
+VISUAL CUE:
+- Employee Dashboard landing. Show greeting ("Good afternoon, Arun 👋"), 
+  interactive status cards, and the live Check-In button.
+- Click "Check In" — show timer start and status change to PRESENT with smooth 
+  Framer Motion animations.
+- Navigate to Time Off page. Fill out a quick leave request form (e.g., Casual 
+  Leave for 2 days) and hit Submit.
+
+VOICEOVER (VO):
+"Starting the day as an employee is effortless. On the personal dashboard, 
+team members get instant visibility into their work stats, leave balances, 
+and daily schedules.
+
+With one click, employees check in for the day. DayFlow tracks exact check-in 
+times, working hours, and auto-calculates half-days or overtime.
+
+Need time off? Employees can request leave in seconds with real-time leave 
+balance validation."
+
+
+[1:10 - 1:55] SECTION 3: HR & ADMIN CONTROL CENTER
+--------------------------------------------------------------------------------
+VISUAL CUE:
+- Switch account to Admin / HR Officer. Show Admin Dashboard with system-wide 
+  analytics, department attendance charts, and leave queues.
+- Go to HR Leave Approvals. Click Approve on the newly submitted leave request. 
+  Open detailed review modal and type a reviewer comment.
+- Navigate to Employee Directory. Show instant skeleton loading placeholders 
+  while searching. Click Edit Profile on an employee.
+- Open Payroll Management. Click "Run Monthly Payroll". Click "Download Slip" 
+  to pop up the genuine printable PDF/HTML payslip.
+
+VOICEOVER (VO):
+"Switching over to the Admin and HR Officer console, management gets complete 
+control over organizational data.
+
+HR managers get a streamlined queue to approve or reject leave requests with 
+full context, balance checks, and custom feedback.
+
+The Employee Directory features instant debounced search and zero-latency 
+skeleton loading. Admins can update employee accounts, assign roles, change 
+employment status, and update exact Department and Designation titles on 
+the fly.
+
+Payroll processing takes just one click. DayFlow calculates gross vs. net 
+salaries, deductions, and PF, and generates a branded, printable pay slip 
+ready for instant download."
+
+
+[1:55 - 2:35] SECTION 4: STANDOUT FEATURES & TECH ARCHITECTURE
+--------------------------------------------------------------------------------
+VISUAL CUE:
+- Click the Notification Bell 🔔 in the top bar. Click a notification row → watch 
+  the Outlook-style reading pane slide in from the top-right with type badges 
+  & mark-as-read button.
+- Go to Reports & Analytics. Click "Export CSV" across Attendance, Leave, and 
+  Payroll tabs — show downloaded .csv files opening in Excel.
+- Diagram / Tech Stack overlay: Next.js 16 + TypeScript + Tailwind CSS v4 + 
+  Prisma + Supabase PostgreSQL + Vercel.
+
+VOICEOVER (VO):
+"For communications, DayFlow features an Outlook-style notification system. 
+Notifications slide in with full message context, timestamping, color-coded 
+event badges, and instant status updates.
+
+Data export is seamless. Every report module allows 1-click native CSV exports 
+generated directly from live database records for offline audit readiness.
+
+Under the hood, DayFlow is built with Next.js 16 App Router and Turbopack, 
+styled with Tailwind CSS v4, backed by a multi-region Supabase PostgreSQL 
+pooler via Prisma ORM, and deployed globally on Vercel."
+
+
+[2:35 - 3:00] SECTION 5: CONCLUSION & CALL TO ACTION
+--------------------------------------------------------------------------------
+VISUAL CUE:
+- Zoom back out to the full application layout showing seamless responsiveness 
+  across mobile drawer and desktop topbar.
+- Ending screen displaying live link:
+  Live App: dayflow-livid-one.vercel.app
+  GitHub: github.com/karthika-jg/DayFlow
+
+VOICEOVER (VO):
+"DayFlow bridges the gap between complex HR operations and modern user 
+experience — making everyday HR tasks simple, transparent, and automated.
+
+Check out our live deployment and open-source codebase today. Thank you!"
+
+================================================================================
+RECORDING & PRODUCTION TIPS
+================================================================================
+1. Screen Resolution: Record in 1080p (1920x1080) or 4K.
+2. Browser View: Hide bookmark bar and press F11 for clean browser recording.
+3. Audio: Use clean noise-cancelled mic audio or an AI voiceover generator.
+================================================================================
