@@ -1,10 +1,10 @@
-import { PrismaClient, UserRole, EmploymentType, EmployeeStatus, AttendanceStatus, LeaveType, LeaveStatus, PayrollStatus, NotificationType } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Seeding Dayflow HRMS database...')
+  console.log('🌱 Seeding Dayflow HRMS SQLite database...')
 
   // Clean existing data
   await prisma.auditLog.deleteMany()
@@ -81,7 +81,7 @@ async function main() {
       employeeId: 'EMP001',
       email: 'admin@dayflow.io',
       password: hashPassword('Admin@123'),
-      role: UserRole.ADMIN,
+      role: 'ADMIN',
       isEmailVerified: true,
       profile: {
         create: {
@@ -94,8 +94,8 @@ async function main() {
           departmentId: operations.id,
           designationId: opsMgr.id,
           joiningDate: new Date('2020-01-01'),
-          employmentType: EmploymentType.FULL_TIME,
-          status: EmployeeStatus.ACTIVE,
+          employmentType: 'FULL_TIME',
+          status: 'ACTIVE',
         },
       },
     },
@@ -107,7 +107,7 @@ async function main() {
       employeeId: 'EMP002',
       email: 'hr@dayflow.io',
       password: hashPassword('HR@123'),
-      role: UserRole.HR_OFFICER,
+      role: 'HR_OFFICER',
       isEmailVerified: true,
       profile: {
         create: {
@@ -120,8 +120,8 @@ async function main() {
           departmentId: hr.id,
           designationId: hrMgr.id,
           joiningDate: new Date('2021-03-01'),
-          employmentType: EmploymentType.FULL_TIME,
-          status: EmployeeStatus.ACTIVE,
+          employmentType: 'FULL_TIME',
+          status: 'ACTIVE',
         },
       },
     },
@@ -129,12 +129,12 @@ async function main() {
 
   // Employee users
   const employeeData = [
-    { id: 'EMP003', email: 'arun.karthik@dayflow.io', pwd: 'Employee@123', first: 'Arun', last: 'Karthik', phone: '+91 96765 43210', dob: '1995-04-12', gender: 'Male', addr: '185, 2nd Cross, Koramangala, Bangalore 560034', dept: engineering.id, desig: srSwEng.id, join: '2022-06-01', type: EmploymentType.FULL_TIME },
-    { id: 'EMP004', email: 'rahul.kumar@dayflow.io', pwd: 'Employee@123', first: 'Rahul', last: 'Kumar', phone: '+91 98800 11223', dob: '1993-11-08', gender: 'Male', addr: '56, Indiranagar, Bangalore 560038', dept: engineering.id, desig: swEng.id, join: '2023-01-15', type: EmploymentType.FULL_TIME },
-    { id: 'EMP005', email: 'priya.patel@dayflow.io', pwd: 'Employee@123', first: 'Priya', last: 'Patel', phone: '+91 99009 22334', dob: '1996-06-30', gender: 'Female', addr: '78, HSR Layout, Bangalore 560102', dept: design.id, desig: designer.id, join: '2022-09-01', type: EmploymentType.FULL_TIME },
-    { id: 'EMP006', email: 'sneha.b@dayflow.io', pwd: 'Employee@123', first: 'Sneha', last: 'Balakrishnan', phone: '+91 97711 33445', dob: '1994-02-18', gender: 'Female', addr: '90, Whitefield, Bangalore 560066', dept: marketing.id, desig: mktMgr.id, join: '2021-11-01', type: EmploymentType.FULL_TIME },
-    { id: 'EMP007', email: 'vikram.s@dayflow.io', pwd: 'Employee@123', first: 'Vikram', last: 'Singh', phone: '+91 96630 44556', dob: '1991-09-05', gender: 'Male', addr: '23, Jayanagar, Bangalore 560041', dept: finance.id, desig: accountant.id, join: '2023-04-10', type: EmploymentType.FULL_TIME },
-    { id: 'EMP008', email: 'deepa.r@dayflow.io', pwd: 'Employee@123', first: 'Deepa', last: 'Ramesh', phone: '+91 95520 55667', dob: '1997-12-25', gender: 'Female', addr: '45, Electronic City, Bangalore 560100', dept: engineering.id, desig: swEng.id, join: '2024-02-01', type: EmploymentType.CONTRACT },
+    { id: 'EMP003', email: 'arun.karthik@dayflow.io', pwd: 'Employee@123', first: 'Arun', last: 'Karthik', phone: '+91 96765 43210', dob: '1995-04-12', gender: 'Male', addr: '185, 2nd Cross, Koramangala, Bangalore 560034', dept: engineering.id, desig: srSwEng.id, join: '2022-06-01', type: 'FULL_TIME' },
+    { id: 'EMP004', email: 'rahul.kumar@dayflow.io', pwd: 'Employee@123', first: 'Rahul', last: 'Kumar', phone: '+91 98800 11223', dob: '1993-11-08', gender: 'Male', addr: '56, Indiranagar, Bangalore 560038', dept: engineering.id, desig: swEng.id, join: '2023-01-15', type: 'FULL_TIME' },
+    { id: 'EMP005', email: 'priya.patel@dayflow.io', pwd: 'Employee@123', first: 'Priya', last: 'Patel', phone: '+91 99009 22334', dob: '1996-06-30', gender: 'Female', addr: '78, HSR Layout, Bangalore 560102', dept: design.id, desig: designer.id, join: '2022-09-01', type: 'FULL_TIME' },
+    { id: 'EMP006', email: 'sneha.b@dayflow.io', pwd: 'Employee@123', first: 'Sneha', last: 'Balakrishnan', phone: '+91 97711 33445', dob: '1994-02-18', gender: 'Female', addr: '90, Whitefield, Bangalore 560066', dept: marketing.id, desig: mktMgr.id, join: '2021-11-01', type: 'FULL_TIME' },
+    { id: 'EMP007', email: 'vikram.s@dayflow.io', pwd: 'Employee@123', first: 'Vikram', last: 'Singh', phone: '+91 96630 44556', dob: '1991-09-05', gender: 'Male', addr: '23, Jayanagar, Bangalore 560041', dept: finance.id, desig: accountant.id, join: '2023-04-10', type: 'FULL_TIME' },
+    { id: 'EMP008', email: 'deepa.r@dayflow.io', pwd: 'Employee@123', first: 'Deepa', last: 'Ramesh', phone: '+91 95520 55667', dob: '1997-12-25', gender: 'Female', addr: '45, Electronic City, Bangalore 560100', dept: engineering.id, desig: swEng.id, join: '2024-02-01', type: 'CONTRACT' },
   ]
 
   const employees = []
@@ -144,7 +144,7 @@ async function main() {
         employeeId: emp.id,
         email: emp.email,
         password: hashPassword(emp.pwd),
-        role: UserRole.EMPLOYEE,
+        role: 'EMPLOYEE',
         isEmailVerified: true,
         profile: {
           create: {
@@ -158,7 +158,7 @@ async function main() {
             designationId: emp.desig,
             joiningDate: new Date(emp.join),
             employmentType: emp.type,
-            status: EmployeeStatus.ACTIVE,
+            status: 'ACTIVE',
           },
         },
       },
@@ -223,13 +223,13 @@ async function main() {
 
       if (dayOfWeek === 0 || dayOfWeek === 6) {
         await prisma.attendanceRecord.create({
-          data: { userId: user.id, date, status: AttendanceStatus.WEEKEND },
+          data: { userId: user.id, date, status: 'WEEKEND' },
         })
         continue
       }
 
       const rand = Math.random()
-      let status: AttendanceStatus = AttendanceStatus.PRESENT
+      let status = 'PRESENT'
       let checkIn: Date | null = null
       let checkOut: Date | null = null
       let workingHours: number | null = null
@@ -245,11 +245,11 @@ async function main() {
         checkOut.setMinutes(checkOut.getMinutes() + Math.round(hoursWorked * 60))
         workingHours = Math.round(hoursWorked * 100) / 100
 
-        if (hoursWorked < 5) status = AttendanceStatus.HALF_DAY
+        if (hoursWorked < 5) status = 'HALF_DAY'
       } else if (rand < 0.92) {
-        status = AttendanceStatus.ON_LEAVE
+        status = 'ON_LEAVE'
       } else {
-        status = AttendanceStatus.ABSENT
+        status = 'ABSENT'
       }
 
       await prisma.attendanceRecord.create({
@@ -264,12 +264,12 @@ async function main() {
   const priya = employees[2]
 
   const leaveRequests = [
-    { userId: arun.id, type: LeaveType.PAID, start: new Date('2025-08-22'), end: new Date('2025-08-24'), days: 3, reason: 'Personal work', status: LeaveStatus.PENDING },
-    { userId: rahul.id, type: LeaveType.SICK, start: new Date('2025-08-10'), end: new Date('2025-08-12'), days: 3, reason: 'Not feeling well', status: LeaveStatus.APPROVED, reviewedById: hrUser.id, reviewComment: 'Take rest, get well soon!', reviewedAt: new Date('2025-08-09') },
-    { userId: priya.id, type: LeaveType.PAID, start: new Date('2025-07-15'), end: new Date('2025-07-18'), days: 4, reason: 'Family function', status: LeaveStatus.APPROVED, reviewedById: hrUser.id, reviewComment: 'Approved!', reviewedAt: new Date('2025-07-14') },
-    { userId: arun.id, type: LeaveType.SICK, start: new Date('2025-07-10'), end: new Date('2025-07-11'), days: 2, reason: 'Fever', status: LeaveStatus.APPROVED, reviewedById: adminUser.id, reviewComment: 'Get well soon', reviewedAt: new Date('2025-07-09') },
-    { userId: rahul.id, type: LeaveType.UNPAID, start: new Date('2025-08-25'), end: new Date('2025-08-27'), days: 3, reason: 'Personal emergency', status: LeaveStatus.PENDING },
-    { userId: priya.id, type: LeaveType.CASUAL, start: new Date('2025-08-28'), end: new Date('2025-08-28'), days: 1, reason: 'Personal work', status: LeaveStatus.REJECTED, reviewedById: hrUser.id, reviewComment: 'Critical project phase, please reschedule', reviewedAt: new Date('2025-08-20') },
+    { userId: arun.id, type: 'PAID', start: new Date('2025-08-22'), end: new Date('2025-08-24'), days: 3, reason: 'Personal work', status: 'PENDING' },
+    { userId: rahul.id, type: 'SICK', start: new Date('2025-08-10'), end: new Date('2025-08-12'), days: 3, reason: 'Not feeling well', status: 'APPROVED', reviewedById: hrUser.id, reviewComment: 'Take rest, get well soon!', reviewedAt: new Date('2025-08-09') },
+    { userId: priya.id, type: 'PAID', start: new Date('2025-07-15'), end: new Date('2025-07-18'), days: 4, reason: 'Family function', status: 'APPROVED', reviewedById: hrUser.id, reviewComment: 'Approved!', reviewedAt: new Date('2025-07-14') },
+    { userId: arun.id, type: 'SICK', start: new Date('2025-07-10'), end: new Date('2025-07-11'), days: 2, reason: 'Fever', status: 'APPROVED', reviewedById: adminUser.id, reviewComment: 'Get well soon', reviewedAt: new Date('2025-07-09') },
+    { userId: rahul.id, type: 'UNPAID', start: new Date('2025-08-25'), end: new Date('2025-08-27'), days: 3, reason: 'Personal emergency', status: 'PENDING' },
+    { userId: priya.id, type: 'CASUAL', start: new Date('2025-08-28'), end: new Date('2025-08-28'), days: 1, reason: 'Personal work', status: 'REJECTED', reviewedById: hrUser.id, reviewComment: 'Critical project phase, please reschedule', reviewedAt: new Date('2025-08-20') },
   ]
 
   for (const lr of leaveRequests) {
@@ -309,7 +309,7 @@ async function main() {
           netSalary: salaryComp.netSalary,
           workingDays: 26,
           presentDays: 22 + Math.floor(Math.random() * 4),
-          status: m <= 6 ? PayrollStatus.PAID : PayrollStatus.PROCESSED,
+          status: m <= 6 ? 'PAID' : 'PROCESSED',
           generatedById: adminUser.id,
           paidAt: m <= 6 ? new Date(`2025-0${m + 1}-01`) : null,
         },
@@ -325,21 +325,21 @@ async function main() {
           userId: user.id,
           title: 'Welcome to Dayflow!',
           message: 'Your account has been set up. Explore your dashboard to get started.',
-          type: NotificationType.EMAIL_VERIFIED,
+          type: 'EMAIL_VERIFIED',
           isRead: true,
         },
         {
           userId: user.id,
           title: 'Attendance Marked',
           message: 'Your attendance has been marked for today.',
-          type: NotificationType.ATTENDANCE_MARKED,
+          type: 'ATTENDANCE_MARKED',
           isRead: false,
         },
       ],
     })
   }
 
-  console.log('✅ Seeding complete!')
+  console.log('✅ SQLite Database Seeding Complete!')
 }
 
 main()
