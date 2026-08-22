@@ -2,25 +2,25 @@
 
 @layer base {
   * {
-    border-color: #E4E4E7;
+    border-color: #E2E8F0;
   }
   body {
-    background-color: #F8F8FA;
-    color: #18181B;
+    background-color: #F1F5F9;
+    color: #1E293B;
     font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 }
 
-/* Custom scrollbar */
+/* Subtle Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F4F3F7; border-radius: 100px; }
-::-webkit-scrollbar-thumb { background: #D4D4D8; border-radius: 100px; }
-::-webkit-scrollbar-thumb:hover { background: #A1A1AA; }
+::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 100px; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
 /* Shimmer skeleton animation */
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #F4F3F7 0%, #E4E4E7 50%, #F4F3F7 100%);
+  background: linear-gradient(90deg, #E2E8F0 0%, #F1F5F9 50%, #E2E8F0 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -30,20 +30,20 @@
   100% { background-position: 200% 0; }
 }
 
-/* Flow gradient background for landing */
+/* Subtle flow gradient background */
 .flow-gradient {
-  background: radial-gradient(ellipse at top left, #F0EEFF 0%, #F8F8FA 40%, #F4F3F7 100%);
+  background: radial-gradient(ellipse at top left, #EEF2FF 0%, #F1F5F9 50%, #E2E8F0 100%);
 }
 
-/* Purple glow effect */
+/* Soft subtle purple glow */
 .purple-glow {
-  box-shadow: 0 0 40px rgba(109, 40, 217, 0.15);
+  box-shadow: 0 4px 25px rgba(109, 40, 217, 0.08);
 }
 
 /* Glass panel */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(228, 228, 231, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.9);
 }

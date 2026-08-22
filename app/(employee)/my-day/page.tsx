@@ -98,15 +98,15 @@ export default function MyDayPage() {
   return (
     <PageTransition>
       <div className="space-y-6">
-        {/* Welcome Header Banner - Crisp Deep Purple High Contrast Container */}
-        <div className="bg-gradient-to-r from-purple-950 via-purple-900 to-indigo-950 rounded-3xl p-6 lg:p-8 text-white shadow-xl border border-purple-800/40 relative overflow-hidden">
-          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
-          <div className="absolute right-32 -top-12 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
+        {/* Welcome Header Banner - Subtle Slate Deep Container */}
+        <div className="bg-slate-900 rounded-3xl p-6 lg:p-8 text-white shadow-lg border border-slate-800 relative overflow-hidden">
+          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-purple-500/5 pointer-events-none" />
+          <div className="absolute right-32 -top-12 w-48 h-48 rounded-full bg-indigo-500/5 pointer-events-none" />
 
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 bg-purple-900/80 px-3.5 py-1 rounded-full text-xs font-semibold mb-3 border border-purple-700/60 text-purple-200">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+              <div className="inline-flex items-center gap-2 bg-slate-800 px-3.5 py-1 rounded-full text-xs font-medium mb-3 border border-slate-700 text-slate-300">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>
                   {new Date().toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -115,17 +115,17 @@ export default function MyDayPage() {
                   })}
                 </span>
               </div>
-              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 text-white">
+              <h1 className="text-2xl lg:text-3xl font-bold tracking-tight mb-2 text-white">
                 {greeting}, {firstName}!
               </h1>
-              <p className="text-purple-200 text-xs sm:text-sm max-w-xl leading-relaxed font-medium">
+              <p className="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
                 Here&apos;s your workday at a glance. Stay aligned with your schedule, track your hours, and maintain your flow.
               </p>
             </div>
 
             {/* Check-In / Check-Out Action Button */}
-            <div className="bg-purple-900/60 backdrop-blur-md p-4 rounded-2xl border border-purple-700/60 flex flex-col items-center justify-center min-w-[200px]">
-              <div className="text-[11px] text-purple-300 font-bold mb-2 uppercase tracking-wider">
+            <div className="bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center min-w-[200px]">
+              <div className="text-[11px] text-slate-400 font-semibold mb-2 uppercase tracking-wider">
                 Workday Status
               </div>
 
@@ -133,30 +133,30 @@ export default function MyDayPage() {
                 <motion.button
                   onClick={handleCheckIn}
                   disabled={actionLoading}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full bg-white text-purple-950 font-extrabold py-3 px-6 rounded-xl shadow-lg hover:bg-purple-100 transition-all duration-200 flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 px-6 rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2 text-xs disabled:opacity-50"
                 >
                   {actionLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-purple-950" />
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
                   ) : (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-300" />
                       Check In Now
                     </>
                   )}
                 </motion.button>
               ) : !isCheckedOut ? (
                 <div className="space-y-2 w-full">
-                  <div className="text-center text-xs font-mono text-white bg-purple-950/80 py-1.5 px-3 rounded-lg border border-purple-700/60 font-bold">
+                  <div className="text-center text-xs font-mono text-slate-200 bg-slate-900 py-1.5 px-3 rounded-lg border border-slate-700">
                     In: {formatTime(todayRecord.checkIn)}
                   </div>
                   <motion.button
                     onClick={handleCheckOut}
                     disabled={actionLoading}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-2.5 px-4 rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-rose-600 hover:bg-rose-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2 text-xs disabled:opacity-50"
                   >
                     {actionLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -170,11 +170,11 @@ export default function MyDayPage() {
                 </div>
               ) : (
                 <div className="text-center space-y-1">
-                  <div className="inline-flex items-center gap-1 bg-green-500/20 text-green-300 text-xs font-bold px-3 py-1 rounded-full border border-green-400/40">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+                  <div className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 text-xs font-medium px-3 py-1 rounded-full border border-emerald-500/20">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
                     Workday Completed
                   </div>
-                  <div className="text-xs text-purple-200 font-medium">
+                  <div className="text-xs text-slate-400">
                     {formatWorkingHours(hoursWorked)} recorded
                   </div>
                 </div>
@@ -189,21 +189,21 @@ export default function MyDayPage() {
             title="Workday Status"
             value={status === 'NOT_MARKED' ? 'Not Checked In' : status}
             subtitle={isCheckedIn ? `In: ${formatTime(todayRecord.checkIn)}` : 'Expected 09:00 AM'}
-            accentColor="#22C55E"
+            accentColor="#10B981"
           />
 
           <StatCard
             title="Hours Worked Today"
             value={hoursWorked ? formatWorkingHours(hoursWorked) : '0h 00m'}
             subtitle={`${hoursProgress}% of 8h goal`}
-            accentColor="#6D28D9"
+            accentColor="#7C3AED"
           />
 
           <StatCard
             title="Paid Leave Available"
             value={leaveBalance ? `${leaveBalance.paidLeave} Days` : '12 Days'}
             subtitle="Remaining in 2025"
-            accentColor="#3B82F6"
+            accentColor="#2563EB"
           />
 
           <StatCard
@@ -225,40 +225,40 @@ export default function MyDayPage() {
             />
 
             {/* Quick Actions Card */}
-            <div className="bg-white rounded-2xl p-6 border border-df-border shadow-sm">
-              <h3 className="font-bold text-slate-900 text-base mb-4">Quick Actions</h3>
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+              <h3 className="font-semibold text-slate-800 text-sm mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Link
                   href="/time-off"
-                  className="group flex flex-col p-4 rounded-xl border border-df-border hover:border-purple-300 bg-slate-50 hover:bg-purple-50/60 transition-all duration-200"
+                  className="group flex flex-col p-4 rounded-xl border border-slate-200 hover:border-purple-200 bg-slate-50/60 hover:bg-purple-50/40 transition-all duration-200"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100/70 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-700 group-hover:text-white transition-colors">
                     <Calendar className="w-4 h-4" />
                   </div>
-                  <span className="font-bold text-slate-900 text-xs mb-0.5">Apply Leave</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Request time off</span>
+                  <span className="font-semibold text-slate-800 text-xs mb-0.5">Apply Leave</span>
+                  <span className="text-[11px] text-slate-500">Request time off</span>
                 </Link>
 
                 <Link
                   href="/attendance"
-                  className="group flex flex-col p-4 rounded-xl border border-df-border hover:border-purple-300 bg-slate-50 hover:bg-purple-50/60 transition-all duration-200"
+                  className="group flex flex-col p-4 rounded-xl border border-slate-200 hover:border-purple-200 bg-slate-50/60 hover:bg-purple-50/40 transition-all duration-200"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100/70 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-700 group-hover:text-white transition-colors">
                     <Clock className="w-4 h-4" />
                   </div>
-                  <span className="font-bold text-slate-900 text-xs mb-0.5">View Attendance</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Monthly history</span>
+                  <span className="font-semibold text-slate-800 text-xs mb-0.5">View Attendance</span>
+                  <span className="text-[11px] text-slate-500">Monthly history</span>
                 </Link>
 
                 <Link
                   href="/payroll"
-                  className="group flex flex-col p-4 rounded-xl border border-df-border hover:border-purple-300 bg-slate-50 hover:bg-purple-50/60 transition-all duration-200"
+                  className="group flex flex-col p-4 rounded-xl border border-slate-200 hover:border-purple-200 bg-slate-50/60 hover:bg-purple-50/40 transition-all duration-200"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100/70 flex items-center justify-center mb-2 text-purple-700 group-hover:bg-purple-700 group-hover:text-white transition-colors">
                     <TrendingUp className="w-4 h-4" />
                   </div>
-                  <span className="font-bold text-slate-900 text-xs mb-0.5">Salary Slips</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Download PDF</span>
+                  <span className="font-semibold text-slate-800 text-xs mb-0.5">Salary Slips</span>
+                  <span className="text-[11px] text-slate-500">Download PDF</span>
                 </Link>
               </div>
             </div>
@@ -267,9 +267,9 @@ export default function MyDayPage() {
           {/* Right Col: Progress Arc & Leave Summary */}
           <div className="space-y-6">
             {/* Workday Progress Card */}
-            <div className="bg-white rounded-2xl p-6 border border-df-border shadow-sm text-center">
-              <h3 className="font-bold text-slate-900 text-base mb-1">Workday Progress</h3>
-              <p className="text-xs text-slate-500 font-medium mb-6">Target: 8h 00m</p>
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center">
+              <h3 className="font-semibold text-slate-800 text-sm mb-1">Workday Progress</h3>
+              <p className="text-xs text-slate-500 mb-6">Target: 8h 00m</p>
 
               {/* Progress Ring */}
               <div className="relative w-40 h-40 mx-auto mb-4 flex items-center justify-center">
@@ -278,7 +278,7 @@ export default function MyDayPage() {
                     cx="50"
                     cy="50"
                     r="40"
-                    className="text-slate-200 stroke-current"
+                    className="text-slate-100 stroke-current"
                     strokeWidth="8"
                     fill="transparent"
                   />
@@ -298,12 +298,12 @@ export default function MyDayPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-extrabold text-slate-900">{hoursProgress}%</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Completed</span>
+                  <span className="text-2xl font-bold text-slate-800">{hoursProgress}%</span>
+                  <span className="text-[11px] text-slate-500">Completed</span>
                 </div>
               </div>
 
-              <div className="text-xs text-slate-600 font-medium bg-slate-100 p-2.5 rounded-xl border border-slate-200">
+              <div className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                 {isCheckedOut
                   ? 'Great job! You completed today\'s target hours.'
                   : isCheckedIn
@@ -313,32 +313,32 @@ export default function MyDayPage() {
             </div>
 
             {/* Leave Balances Card */}
-            <div className="bg-white rounded-2xl p-6 border border-df-border shadow-sm">
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-slate-900 text-base">Leave Balances</h3>
-                <Link href="/time-off" className="text-xs font-bold text-purple-700 hover:underline">
+                <h3 className="font-semibold text-slate-800 text-sm">Leave Balances</h3>
+                <Link href="/time-off" className="text-xs font-semibold text-purple-700 hover:underline">
                   Apply →
                 </Link>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-xs font-bold text-slate-900">Paid Leave</span>
-                  <span className="text-xs font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-full border border-green-300">
+                  <span className="text-xs font-medium text-slate-700">Paid Leave</span>
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                     {leaveBalance?.paidLeave ?? 12} days left
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-xs font-bold text-slate-900">Sick Leave</span>
-                  <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2.5 py-1 rounded-full border border-blue-300">
+                  <span className="text-xs font-medium text-slate-700">Sick Leave</span>
+                  <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
                     {leaveBalance?.sickLeave ?? 8} days left
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-xs font-bold text-slate-900">Casual Leave</span>
-                  <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
+                  <span className="text-xs font-medium text-slate-700">Casual Leave</span>
+                  <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
                     {leaveBalance?.casualLeave ?? 6} days left
                   </span>
                 </div>

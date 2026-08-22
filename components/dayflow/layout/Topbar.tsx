@@ -47,21 +47,21 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 py-3 flex items-center justify-between gap-4 shadow-sm">
+    <header className="sticky top-0 z-20 bg-slate-100/90 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 py-3 flex items-center justify-between gap-4">
       {/* Mobile hamburger + Greeting */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileNav}
-          className="lg:hidden p-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="text-xs font-semibold text-slate-700 hidden sm:block">
-            {greeting}, <span className="font-extrabold text-slate-900">{userName.split(' ')[0]}</span> 👋
+          <div className="text-xs font-medium text-slate-600 hidden sm:block">
+            {greeting}, <span className="font-semibold text-slate-800">{userName.split(' ')[0]}</span> 👋
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-200">
+          <span className="text-[10px] font-semibold uppercase tracking-wider bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-200/60">
             {userRole}
           </span>
         </div>
@@ -75,7 +75,7 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
           <input
             type="text"
             placeholder="Search anything... (Cmd+K)"
-            className="w-full bg-slate-100/80 text-xs text-slate-900 placeholder:text-slate-500 pl-9 pr-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-600 focus:bg-white transition-all font-medium"
+            className="w-full bg-white text-xs text-slate-800 placeholder:text-slate-400 pl-9 pr-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-600 transition-all font-medium"
           />
         </div>
 
@@ -86,11 +86,11 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
               setShowNotifications(!showNotifications)
               setShowProfileMenu(false)
             }}
-            className="relative p-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition-colors"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-purple-600 rounded-full ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-purple-600 rounded-full ring-2 ring-white animate-pulse" />
             )}
           </button>
 
@@ -104,12 +104,12 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
               >
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
-                  <span className="font-bold text-slate-900 text-sm">Notifications</span>
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                  <span className="font-bold text-slate-800 text-sm">Notifications</span>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
-                      className="text-xs text-purple-700 font-bold hover:underline flex items-center gap-1"
+                      className="text-xs text-purple-700 font-semibold hover:underline flex items-center gap-1"
                     >
                       <Check className="w-3.5 h-3.5" />
                       Mark all as read
@@ -119,7 +119,7 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
 
                 <div className="space-y-2 max-h-72 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <div className="text-center py-6 text-xs text-slate-500 font-medium">
+                    <div className="text-center py-6 text-xs text-slate-400 font-medium">
                       No recent notifications
                     </div>
                   ) : (
@@ -127,21 +127,21 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
                       <div
                         key={n.id}
                         className={`p-3 rounded-xl text-xs transition-colors ${
-                          n.isRead ? 'bg-slate-50 border border-slate-100' : 'bg-purple-50/70 border border-purple-100 font-medium'
+                          n.isRead ? 'bg-slate-50 border border-slate-100' : 'bg-purple-50/60 border border-purple-100 font-medium'
                         }`}
                       >
-                        <div className="font-bold text-slate-900">{n.title}</div>
-                        <div className="text-slate-600 mt-0.5 line-clamp-2">{n.message}</div>
-                        <div className="text-[10px] text-slate-500 mt-1 font-mono">{formatTimeAgo(n.createdAt)}</div>
+                        <div className="font-semibold text-slate-800">{n.title}</div>
+                        <div className="text-slate-500 mt-0.5 line-clamp-2">{n.message}</div>
+                        <div className="text-[10px] text-slate-400 mt-1 font-mono">{formatTimeAgo(n.createdAt)}</div>
                       </div>
                     ))
                   )}
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-slate-200 text-center">
+                <div className="mt-3 pt-2 border-t border-slate-100 text-center">
                   <Link
                     href={isAdmin ? '/admin/notifications' : '/notifications'}
-                    className="text-xs text-purple-700 font-bold hover:underline"
+                    className="text-xs text-purple-700 font-semibold hover:underline"
                     onClick={() => setShowNotifications(false)}
                   >
                     View all notifications →
@@ -161,7 +161,7 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
             }}
             className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-purple-300 transition-all"
           >
-            <div className="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-md">
+            <div className="w-8.5 h-8.5 rounded-full bg-purple-700 text-white font-bold flex items-center justify-center text-xs shadow-sm">
               {initials}
             </div>
           </button>
@@ -176,14 +176,14 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
               >
-                <div className="p-3 border-b border-slate-200 mb-1">
-                  <div className="font-bold text-slate-900 text-sm truncate">{userName}</div>
+                <div className="p-3 border-b border-slate-100 mb-1">
+                  <div className="font-bold text-slate-800 text-sm truncate">{userName}</div>
                   <div className="text-xs text-slate-500 truncate">{userEmail}</div>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-[10px] font-mono bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono bg-purple-50 text-purple-700 font-semibold px-2 py-0.5 rounded border border-purple-100">
                       {employeeId}
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                       {userRole}
                     </span>
                   </div>
@@ -191,17 +191,17 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
 
                 <Link
                   href={isAdmin ? '/admin/dashboard' : '/profile'}
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
                   onClick={() => setShowProfileMenu(false)}
                 >
-                  <User className="w-4 h-4 text-slate-500" />
+                  <User className="w-4 h-4 text-slate-400" />
                   <span>My Profile</span>
                 </Link>
 
                 {['ADMIN', 'HR_OFFICER'].includes(userRole) && (
                   <Link
                     href="/admin/dashboard"
-                    className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-purple-700 hover:bg-purple-50 rounded-xl transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-50 rounded-xl transition-colors"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     <ShieldCheck className="w-4 h-4 text-purple-600" />
@@ -211,20 +211,20 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
 
                 <Link
                   href={isAdmin ? '/admin/settings' : '/settings'}
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
                   onClick={() => setShowProfileMenu(false)}
                 >
-                  <Settings className="w-4 h-4 text-slate-500" />
+                  <Settings className="w-4 h-4 text-slate-400" />
                   <span>Settings</span>
                 </Link>
 
-                <div className="border-t border-slate-200 my-1" />
+                <div className="border-t border-slate-100 my-1" />
 
                 <button
                   onClick={() => signOut({ callbackUrl: '/sign-in' })}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                 >
-                  <LogOut className="w-4 h-4 text-red-600" />
+                  <LogOut className="w-4 h-4 text-rose-600" />
                   <span>Log out</span>
                 </button>
               </motion.div>
