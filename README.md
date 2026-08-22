@@ -1,36 +1,171 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+<img src="https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js" />
+<img src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript" />
+<img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase" />
+<img src="https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel" />
+<img src="https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=for-the-badge&logo=tailwindcss" />
 
-First, run the development server:
+# 🗓️ DayFlow
+
+**A modern, full-stack Human Resource Management System built for real teams.**
+
+[🚀 Live Demo](https://dayflow-livid-one.vercel.app) · [GitHub](https://github.com/karthika-jg/DayFlow)
+
+</div>
+
+---
+
+## ✨ What is DayFlow?
+
+DayFlow is a production-ready HRMS that digitizes your entire employee workday — from clocking in to getting paid. Built with Next.js 16, Prisma ORM, and a Supabase PostgreSQL backend, and deployed live on Vercel.
+
+It supports three user roles out of the box:
+
+| Role | Access |
+|------|--------|
+| **Admin** | Full system control — employees, payroll, reports, settings |
+| **HR Officer** | Manage attendance, approve leaves, view payroll |
+| **Employee** | Personal dashboard, attendance, leave requests, payslips |
+
+---
+
+## 🌐 Live Deployment
+
+> Hosted on **Vercel** · Database on **Supabase (ap-southeast-1)**
+
+🔗 **[https://dayflow-livid-one.vercel.app](https://dayflow-livid-one.vercel.app)**
+
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@dayflow.io` | `Admin@123` |
+| HR Officer | `hr@dayflow.io` | `HR@123` |
+| Employee | `emp001@dayflow.io` | `Emp@123` |
+
+---
+
+## 🧩 Features
+
+### 👥 Employee Management
+- Add, edit, and manage employee profiles
+- Assign departments, designations, reporting managers
+- Upload avatars and documents (offer letters, contracts, ID proofs)
+
+### 🕐 Attendance
+- One-tap Check In / Check Out with live timer
+- View daily, weekly, and monthly attendance logs
+- Status tracking: Present, Absent, Half Day, On Leave, Holiday
+
+### 🏖️ Leave Management
+- Submit leave requests with type selection (Paid, Sick, Casual, Unpaid, etc.)
+- Admin/HR approval workflow with comments
+- Real-time leave balance tracking per employee
+
+### 💰 Payroll
+- Run monthly payroll with one click
+- Full earnings & deductions breakdown (Basic, HRA, PF, Tax, etc.)
+- **Printable payslip generator** — branded PDF-ready HTML payslip per employee
+
+### 🔔 Notifications
+- Real-time notification center for all system events
+- **Outlook-style popup** — click any notification to open a full detail modal with the complete message, timestamp, and mark-as-read action
+
+### 📊 Reports & Analytics
+- Attendance, leave, and payroll reports with date range filters
+- Export-ready data tables
+
+### 🔒 Security & Auth
+- Secure sign-in with NextAuth.js
+- OTP-based email verification
+- Role-based access control (RBAC) — every route and API is protected
+- Audit log for admin actions
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Auth | NextAuth.js v4 |
+| ORM | Prisma v5 |
+| Database | Supabase (PostgreSQL, pooler mode) |
+| Animations | Framer Motion |
+| Charts | Recharts |
+| Hosting | Vercel |
+| Icons | Lucide React |
+
+---
+
+## 🚀 Running Locally
+
+### 1. Clone the repo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/karthika-jg/DayFlow.git
+cd DayFlow
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Set up environment variables
 
-## Learn More
+Create a `.env` file in the root:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
+NEXTAUTH_SECRET="your-secret-here"
+NEXTAUTH_URL="http://localhost:3000"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Push schema & seed data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm db:push
+pnpm db:seed
+```
 
-## Deploy on Vercel
+### 5. Start the dev server
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) and sign in with the demo credentials above.
+
+---
+
+## 📁 Project Structure
+
+```
+dayflow/
+├── app/
+│   ├── (employee)/        # Employee-facing pages
+│   ├── admin/             # Admin & HR pages
+│   └── api/               # All API routes (Next.js Route Handlers)
+├── components/
+│   └── dayflow/           # Shared UI components
+│       ├── layout/        # Topbar, Sidebar, MobileDrawer
+│       └── ...
+├── prisma/
+│   ├── schema.prisma      # Full 15-model PostgreSQL schema
+│   └── seed.ts            # Demo data seeder
+└── lib/
+    ├── auth/              # NextAuth config + helpers
+    └── db.ts              # Prisma client singleton
+```
+
+---
+
+## 📄 License
+
+MIT © 2026 DayFlow
