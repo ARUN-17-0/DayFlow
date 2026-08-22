@@ -184,10 +184,10 @@ export default function AddEmployeePage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-royal-purple text-white text-xs font-semibold px-6 py-3 rounded-xl hover:bg-deep-violet flex items-center gap-1.5 shadow-md shadow-purple-500/20 mt-4"
+          className="bg-[#6D28D9] hover:bg-[#5B21B6] text-white text-xs font-semibold px-6 py-3 rounded-xl flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50 mt-4"
         >
-          <Save className="w-4 h-4" />
-          {loading ? 'Creating...' : 'Create Employee Account'}
+          <Save className="w-4 h-4 text-white" />
+          <span>{loading ? 'Creating...' : 'Create Employee Account'}</span>
         </button>
       </form>
     </PageTransition>

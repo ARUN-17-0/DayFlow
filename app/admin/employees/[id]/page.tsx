@@ -163,10 +163,10 @@ export default function EditEmployeePage() {
           <button
             type="submit"
             disabled={saving}
-            className="bg-royal-purple text-white text-xs font-semibold px-6 py-2.5 rounded-xl hover:bg-deep-violet flex items-center gap-1.5 shadow-md shadow-purple-500/20"
+            className="bg-[#6D28D9] hover:bg-[#5B21B6] text-white text-xs font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
           >
-            <Save className="w-4 h-4" />
-            {saving ? 'Saving...' : 'Save Changes'}
+            <Save className="w-4 h-4 text-white" />
+            <span>{saving ? 'Saving...' : 'Save Changes'}</span>
           </button>
         </form>
       </div>
