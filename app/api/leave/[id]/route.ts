@@ -2,10 +2,6 @@ import { NextRequest } from 'next/server'
 import { getAuthUser, apiError, apiSuccess } from '@/lib/auth/helpers'
 import { prisma } from '@/lib/db'
 
-export function generateStaticParams() {
-  return [{ id: 'demo' }]
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -83,3 +79,4 @@ export async function DELETE(
     return apiError('Failed to cancel leave request', 500)
   }
 }
+

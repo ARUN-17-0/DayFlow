@@ -2,10 +2,6 @@ import { NextRequest } from 'next/server'
 import { getAuthUser, apiError, apiSuccess } from '@/lib/auth/helpers'
 import { prisma } from '@/lib/db'
 
-export function generateStaticParams() {
-  return [{ id: 'demo' }]
-}
-
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

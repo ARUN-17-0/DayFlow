@@ -9,12 +9,10 @@ import { Check, X, User, Calendar, MessageSquare, AlertCircle, CheckCircle2, XCi
 import { toast } from 'sonner'
 import { formatDate, getInitials } from '@/lib/utils'
 
-import { DEMO_LEAVE_REQUESTS } from '@/lib/demoData'
-
 export default function AdminTimeOffPage() {
   const [activeTab, setActiveTab] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING')
-  const [requests, setRequests] = useState<any[]>(DEMO_LEAVE_REQUESTS)
-  const [loading, setLoading] = useState(false)
+  const [requests, setRequests] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   // Modal Review State
   const [selectedRequest, setSelectedRequest] = useState<any>(null)
@@ -26,21 +24,11 @@ export default function AdminTimeOffPage() {
       const statusParam = activeTab === 'ALL' ? '' : `status=${activeTab}`
       const res = await fetch(`/api/leave?${statusParam}`)
       const json = await res.json()
-      if (json.success && json.data.items?.length > 0) {
-        setRequests(json.data.items)
-      } else {
-        if (activeTab === 'ALL') {
-          setRequests(DEMO_LEAVE_REQUESTS)
-        } else {
-          setRequests(DEMO_LEAVE_REQUESTS.filter((r) => r.status === activeTab))
-        }
+      if (json.success) {
+        setRequests(json.data.items || [])
       }
     } catch {
-      if (activeTab === 'ALL') {
-        setRequests(DEMO_LEAVE_REQUESTS)
-      } else {
-        setRequests(DEMO_LEAVE_REQUESTS.filter((r) => r.status === activeTab))
-      }
+      toast.error('Failed to load leave requests')
     } finally {
       setLoading(false)
     }

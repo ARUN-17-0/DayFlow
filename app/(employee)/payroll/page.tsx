@@ -9,18 +9,16 @@ import { IndianRupee, Download, FileText, Calendar } from 'lucide-react'
 import { toast } from 'sonner'
 import { getMonthName } from '@/lib/utils'
 
-import { DEMO_PAYROLL_RECORDS } from '@/lib/demoData'
-
 export default function PayrollPage() {
-  const [payrolls, setPayrolls] = useState<any[]>(DEMO_PAYROLL_RECORDS)
-  const [loading, setLoading] = useState(false)
+  const [payrolls, setPayrolls] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/payroll')
       .then((r) => r.json())
       .then((res) => {
-        if (res.success && res.data?.items?.length > 0) {
-          setPayrolls(res.data.items)
+        if (res.success && res.data) {
+          setPayrolls(res.data.items || [])
         }
       })
       .catch(() => {})

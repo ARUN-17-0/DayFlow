@@ -5,10 +5,6 @@ import { reviewLeaveSchema } from '@/lib/validations'
 import { getLeaveApprovedTemplate, getLeaveRejectedTemplate, sendEmail } from '@/lib/email'
 import { formatDate } from '@/lib/utils'
 
-export function generateStaticParams() {
-  return [{ id: 'demo' }]
-}
-
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -117,3 +113,4 @@ export async function PUT(
     return apiError('Failed to process leave review', 500)
   }
 }
+

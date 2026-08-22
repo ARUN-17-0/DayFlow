@@ -9,24 +9,20 @@ import { IndianRupee, Download, Play, Users, FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { getMonthName } from '@/lib/utils'
 
-import { DEMO_PAYROLL_RECORDS } from '@/lib/demoData'
-
 export default function AdminPayrollPage() {
-  const [payrolls, setPayrolls] = useState<any[]>(DEMO_PAYROLL_RECORDS)
-  const [loading, setLoading] = useState(false)
+  const [payrolls, setPayrolls] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
 
   const fetchPayroll = async () => {
     try {
       const res = await fetch('/api/payroll')
       const json = await res.json()
-      if (json.success && json.data?.items?.length > 0) {
-        setPayrolls(json.data.items)
-      } else {
-        setPayrolls(DEMO_PAYROLL_RECORDS)
+      if (json.success) {
+        setPayrolls(json.data.items || [])
       }
     } catch {
-      setPayrolls(DEMO_PAYROLL_RECORDS)
+      toast.error('Failed to load payroll data')
     } finally {
       setLoading(false)
     }

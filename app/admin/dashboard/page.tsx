@@ -8,23 +8,21 @@ import { StatusChip } from '@/components/dayflow/StatusChip'
 import { Users, Clock, Calendar, AlertCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-import { DEMO_LEAVE_REQUESTS } from '@/lib/demoData'
-
 export default function AdminDashboardPage() {
-  const [stats] = useState({
-    totalEmployees: 8,
-    presentToday: 7,
-    onLeave: 1,
-    pendingRequests: 2,
+  const [stats, setStats] = useState({
+    totalEmployees: 248,
+    presentToday: 217,
+    onLeave: 18,
+    pendingRequests: 13,
   })
-  const [pendingLeaves, setPendingLeaves] = useState<any[]>(DEMO_LEAVE_REQUESTS)
+  const [pendingLeaves, setPendingLeaves] = useState<any[]>([])
 
   useEffect(() => {
     fetch('/api/leave?status=PENDING&limit=5')
       .then((r) => r.json())
       .then((res) => {
-        if (res.success && res.data?.items?.length > 0) {
-          setPendingLeaves(res.data.items)
+        if (res.success && res.data) {
+          setPendingLeaves(res.data.items || [])
         }
       })
       .catch(() => {})

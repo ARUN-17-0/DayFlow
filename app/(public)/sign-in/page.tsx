@@ -30,16 +30,6 @@ function SignInForm() {
 
   const onSubmit = async (data: LoginInput) => {
     setLoading(true)
-    
-    let role = 'EMPLOYEE'
-    if (data.email.toLowerCase().includes('admin')) role = 'ADMIN'
-    else if (data.email.toLowerCase().includes('hr')) role = 'HR_OFFICER'
-
-    let dest = callbackUrl
-    if (!dest || dest === '/my-day' || dest === '/dashboard') {
-      dest = (role === 'ADMIN' || role === 'HR_OFFICER') ? '/admin/dashboard' : '/my-day'
-    }
-
     try {
       const res = await signIn('credentials', {
         email: data.email,
@@ -47,22 +37,30 @@ function SignInForm() {
         redirect: false,
       })
 
-      if (res?.ok) {
-        toast.success('Welcome back to Dayflow!')
-        router.push(dest)
+      if (res?.error) {
+        toast.error(res.error || 'Invalid email or password')
+        setLoading(false)
         return
       }
-    } catch {
-      // Ignore network errors in static GitHub Pages environment
-    }
 
-    // Static Demo fallback for GitHub Pages
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('dayflow_user', JSON.stringify({ email: data.email, role }))
+      toast.success('Welcome back to Dayflow!')
+      
+      // Determine destination based on email/role if callbackUrl not specified
+      let dest = callbackUrl
+      if (!dest || dest === '/my-day') {
+        if (data.email.includes('admin') || data.email.includes('hr@')) {
+          dest = '/admin/dashboard'
+        } else {
+          dest = '/my-day'
+        }
+      }
+
+      router.push(dest)
+      router.refresh()
+    } catch {
+      toast.error('An error occurred during sign in')
+      setLoading(false)
     }
-    toast.success('Welcome back to Dayflow!')
-    router.push(dest)
-    setLoading(false)
   }
 
   const setDemoUser = (email: string, pwd: string) => {

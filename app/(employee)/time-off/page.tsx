@@ -8,13 +8,11 @@ import { Calendar, Plus, Clock, CheckCircle2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
 
-import { DEMO_LEAVE_REQUESTS, DEMO_LEAVE_BALANCE } from '@/lib/demoData'
-
 export default function TimeOffPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'apply'>('overview')
-  const [requests, setRequests] = useState<any[]>(DEMO_LEAVE_REQUESTS)
-  const [balance, setBalance] = useState<any>(DEMO_LEAVE_BALANCE)
-  const [loading, setLoading] = useState(false)
+  const [requests, setRequests] = useState<any[]>([])
+  const [balance, setBalance] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   // Form state
   const [leaveType, setLeaveType] = useState('PAID')
@@ -32,11 +30,10 @@ export default function TimeOffPage() {
       const reqJson = await reqRes.json()
       const balJson = await balRes.json()
 
-      if (reqJson.success && reqJson.data?.items?.length > 0) setRequests(reqJson.data.items)
-      if (balJson.success && balJson.data) setBalance(balJson.data)
+      if (reqJson.success) setRequests(reqJson.data.items || [])
+      if (balJson.success) setBalance(balJson.data)
     } catch {
-      setRequests(DEMO_LEAVE_REQUESTS)
-      setBalance(DEMO_LEAVE_BALANCE)
+      toast.error('Failed to load leave data')
     } finally {
       setLoading(false)
     }
