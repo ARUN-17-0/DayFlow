@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { PageTransition } from '@/components/dayflow/animations/PageTransition'
 import { WorkdayTimeline } from '@/components/dayflow/timeline/WorkdayTimeline'
-import { DailyWorkTasks } from '@/components/dayflow/tasks/DailyWorkTasks'
 import { StatCard } from '@/components/dayflow/cards/StatCard'
 import {
   Clock,
@@ -149,7 +148,7 @@ export default function MyDayPage() {
                 </motion.button>
               ) : !isCheckedOut ? (
                 <div className="space-y-2 w-full">
-                  <div className="text-center text-xs font-mono text-slate-200 bg-slate-900 py-1.5 px-3 rounded-lg border border-slate-700 font-bold">
+                  <div className="text-center text-xs font-mono text-slate-200 bg-slate-900 py-1.5 px-3 rounded-lg border border-slate-700">
                     In: {formatTime(todayRecord.checkIn)}
                   </div>
                   <motion.button
@@ -215,18 +214,15 @@ export default function MyDayPage() {
           />
         </div>
 
-        {/* Main Content Grid: Timeline + Tasks + Actions */}
+        {/* Main Content Grid: Timeline + Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left 2 Cols: Timeline & Work Tasks */}
+          {/* Left 2 Cols: Signature Workday Timeline */}
           <div className="lg:col-span-2 space-y-6">
             <WorkdayTimeline
               checkInTime={todayRecord?.checkIn}
               checkOutTime={todayRecord?.checkOut}
               status={status}
             />
-
-            {/* Daily Tasks & Work Proof Submission */}
-            <DailyWorkTasks />
 
             {/* Quick Actions Card */}
             <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">

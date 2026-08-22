@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
 
     const now = new Date()
     const isLate = now.getHours() > 9 || (now.getHours() === 9 && now.getMinutes() > 15)
+    const lateNote = isLate ? 'LATE_CHECK_IN' : 'ON_TIME'
 
     let record
     if (existingRecord) {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
         data: {
           checkIn: now,
           status: 'PRESENT',
-          notes: isLate ? 'Late arrival (checked in after 09:15 AM)' : 'Checked in on time',
+          notes: lateNote,
         },
       })
     } else {
@@ -47,20 +48,17 @@ export async function POST(request: NextRequest) {
           date: today,
           checkIn: now,
           status: 'PRESENT',
-          notes: isLate ? 'Late arrival (checked in after 09:15 AM)' : 'Checked in on time',
+          notes: lateNote,
         },
       })
     }
 
     // Notification
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     await prisma.notification.create({
       data: {
         userId: auth.user.id,
-        title: isLate ? 'Late Check In' : 'Checked In',
-        message: isLate
-          ? `You checked in at ${timeStr} (Late Arrival recorded).`
-          : `You checked in on time at ${timeStr}.`,
+        title: isLate ? 'Late Check-In Recorded' : 'Checked In',
+        message: `You checked in at ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${isLate ? ' (Late)' : ' (On Time)'}`,
         type: 'ATTENDANCE_MARKED',
       },
     })
@@ -68,8 +66,8 @@ export async function POST(request: NextRequest) {
     return apiSuccess(
       record,
       isLate
-        ? `Checked in at ${timeStr} (Late arrival recorded).`
-        : `Checked in at ${timeStr}. Have a great workday!`
+        ? 'Checked in! (Recorded as late check-in)'
+        : 'Check-in successful! Have a great workday.'
     )
   } catch (error) {
     console.error('[Check-in Error]', error)
