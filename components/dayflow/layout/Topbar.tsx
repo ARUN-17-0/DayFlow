@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Bell, Menu, User, Settings, LogOut, Check, ShieldCheck } from 'lucide-react'
 import { getInitials, getGreeting, formatTimeAgo } from '@/lib/utils'
+import { NotificationDetailModal } from '@/components/dayflow/NotificationDetailModal'
 
 type TopbarProps = {
   onOpenMobileNav?: () => void
@@ -18,6 +19,7 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
+  const [selectedNotification, setSelectedNotification] = useState<any | null>(null)
 
   const userName = session?.user?.name || 'User'
   const userEmail = session?.user?.email || ''
@@ -47,6 +49,7 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
   }
 
   return (
+    <>
     <header className="sticky top-0 z-20 bg-slate-100/90 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 py-3 flex items-center justify-between gap-4">
       {/* Mobile hamburger + Greeting */}
       <div className="flex items-center gap-3">
@@ -124,16 +127,20 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
                     </div>
                   ) : (
                     notifications.map((n) => (
-                      <div
+                      <button
                         key={n.id}
-                        className={`p-3 rounded-xl text-xs transition-colors ${
-                          n.isRead ? 'bg-slate-50 border border-slate-100' : 'bg-purple-50/60 border border-purple-100 font-medium'
+                        onClick={() => {
+                          setSelectedNotification(n)
+                          setShowNotifications(false)
+                        }}
+                        className={`w-full text-left p-3 rounded-xl text-xs transition-colors cursor-pointer hover:scale-[1.01] hover:shadow-sm ${
+                          n.isRead ? 'bg-slate-50 border border-slate-100 hover:bg-slate-100' : 'bg-purple-50/60 border border-purple-100 font-medium hover:bg-purple-100/60'
                         }`}
                       >
                         <div className="font-semibold text-slate-800">{n.title}</div>
                         <div className="text-slate-500 mt-0.5 line-clamp-2">{n.message}</div>
                         <div className="text-[10px] text-slate-400 mt-1 font-mono">{formatTimeAgo(n.createdAt)}</div>
-                      </div>
+                      </button>
                     ))
                   )}
                 </div>
@@ -233,5 +240,21 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
         </div>
       </div>
     </header>
+
+    {/* Outlook-style full notification detail modal */}
+    <NotificationDetailModal
+      notification={selectedNotification}
+      onClose={() => setSelectedNotification(null)}
+      onMarkRead={(id) => {
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+        )
+        setUnreadCount((c) => Math.max(0, c - 1))
+        setSelectedNotification((prev: any) =>
+          prev?.id === id ? { ...prev, isRead: true } : prev
+        )
+      }}
+    />
+  </>
   )
 }
