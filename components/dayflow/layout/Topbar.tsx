@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Bell, Menu, User, Settings, LogOut, Check } from 'lucide-react'
+import { Search, Bell, Menu, User, Settings, LogOut, Check, ShieldCheck } from 'lucide-react'
 import { getInitials, getGreeting, formatTimeAgo } from '@/lib/utils'
 
 type TopbarProps = {
@@ -21,12 +21,12 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
 
   const userName = session?.user?.name || 'User'
   const userEmail = session?.user?.email || ''
+  const userRole = (session?.user as any)?.role || 'EMPLOYEE'
   const employeeId = (session?.user as any)?.employeeId || ''
   const initials = getInitials(userName.split(' ')[0] || 'U', userName.split(' ')[1] || 'S')
   const greeting = getGreeting()
 
   useEffect(() => {
-    // Fetch notifications summary
     fetch('/api/notifications?limit=5')
       .then((r) => r.json())
       .then((res) => {
@@ -47,21 +47,23 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-df-border px-4 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 py-3 flex items-center justify-between gap-4 shadow-sm">
       {/* Mobile hamburger + Greeting */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileNav}
-          className="lg:hidden p-2 rounded-xl text-zinc-grey hover:text-charcoal hover:bg-mist-grey transition-colors"
+          className="lg:hidden p-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div>
-          <div className="text-xs text-zinc-grey font-medium hidden sm:block">
-            {greeting}, <span className="font-semibold text-charcoal">{userName.split(' ')[0]}</span> 👋
+        <div className="flex items-center gap-2">
+          <div className="text-xs font-semibold text-slate-700 hidden sm:block">
+            {greeting}, <span className="font-extrabold text-slate-900">{userName.split(' ')[0]}</span> 👋
           </div>
-          <div className="text-xs font-mono text-zinc-grey sm:hidden">{employeeId}</div>
+          <span className="text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full border border-purple-200">
+            {userRole}
+          </span>
         </div>
       </div>
 
@@ -69,11 +71,11 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
       <div className="flex items-center gap-3">
         {/* Search bar */}
         <div className="relative hidden md:block w-64">
-          <Search className="w-4 h-4 text-zinc-grey absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search anything... (Cmd+K)"
-            className="w-full bg-mist-grey/70 text-xs text-charcoal placeholder:text-zinc-grey pl-9 pr-4 py-2 rounded-xl border border-df-border/60 focus:outline-none focus:border-royal-purple focus:bg-white transition-all"
+            className="w-full bg-slate-100/80 text-xs text-slate-900 placeholder:text-slate-500 pl-9 pr-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-600 focus:bg-white transition-all font-medium"
           />
         </div>
 
@@ -84,17 +86,11 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
               setShowNotifications(!showNotifications)
               setShowProfileMenu(false)
             }}
-            className="relative p-2 rounded-xl text-zinc-grey hover:text-charcoal hover:bg-mist-grey transition-colors"
+            className="relative p-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
-            <motion.div
-              animate={unreadCount > 0 ? { rotate: [0, -10, 10, -10, 0] } : {}}
-              transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 4 }}
-            >
-              <Bell className="w-5 h-5" />
-            </motion.div>
-
+            <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-royal-purple rounded-full ring-2 ring-white animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-purple-600 rounded-full ring-2 ring-white animate-pulse" />
             )}
           </button>
 
@@ -102,18 +98,18 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
           <AnimatePresence>
             {showNotifications && (
               <motion.div
-                className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl border border-df-border shadow-xl p-4 z-50"
+                className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50"
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
               >
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-df-border">
-                  <span className="font-semibold text-charcoal text-sm">Notifications</span>
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                  <span className="font-bold text-slate-900 text-sm">Notifications</span>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
-                      className="text-xs text-royal-purple font-medium hover:underline flex items-center gap-1"
+                      className="text-xs text-purple-700 font-bold hover:underline flex items-center gap-1"
                     >
                       <Check className="w-3.5 h-3.5" />
                       Mark all as read
@@ -123,32 +119,32 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
 
                 <div className="space-y-2 max-h-72 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <div className="text-center py-6 text-xs text-zinc-grey">
+                    <div className="text-center py-6 text-xs text-slate-500 font-medium">
                       No recent notifications
                     </div>
                   ) : (
                     notifications.map((n) => (
                       <div
                         key={n.id}
-                        className={`p-2.5 rounded-xl text-xs transition-colors ${
-                          n.isRead ? 'bg-cool-grey/50' : 'bg-lavender/50 font-medium'
+                        className={`p-3 rounded-xl text-xs transition-colors ${
+                          n.isRead ? 'bg-slate-50 border border-slate-100' : 'bg-purple-50/70 border border-purple-100 font-medium'
                         }`}
                       >
-                        <div className="font-semibold text-charcoal">{n.title}</div>
-                        <div className="text-zinc-grey mt-0.5 line-clamp-2">{n.message}</div>
-                        <div className="text-[10px] text-zinc-grey mt-1">{formatTimeAgo(n.createdAt)}</div>
+                        <div className="font-bold text-slate-900">{n.title}</div>
+                        <div className="text-slate-600 mt-0.5 line-clamp-2">{n.message}</div>
+                        <div className="text-[10px] text-slate-500 mt-1 font-mono">{formatTimeAgo(n.createdAt)}</div>
                       </div>
                     ))
                   )}
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-df-border text-center">
+                <div className="mt-3 pt-2 border-t border-slate-200 text-center">
                   <Link
                     href={isAdmin ? '/admin/notifications' : '/notifications'}
-                    className="text-xs text-royal-purple font-semibold hover:underline"
+                    className="text-xs text-purple-700 font-bold hover:underline"
                     onClick={() => setShowNotifications(false)}
                   >
-                    View all notifications
+                    View all notifications →
                   </Link>
                 </div>
               </motion.div>
@@ -163,9 +159,9 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
               setShowProfileMenu(!showProfileMenu)
               setShowNotifications(false)
             }}
-            className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-purple-200 transition-all"
+            className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-purple-300 transition-all"
           >
-            <div className="w-9 h-9 rounded-full bg-royal-purple text-white font-bold flex items-center justify-center text-xs shadow-sm">
+            <div className="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-md">
               {initials}
             </div>
           </button>
@@ -174,43 +170,59 @@ export function Topbar({ onOpenMobileNav, isAdmin = false }: TopbarProps) {
           <AnimatePresence>
             {showProfileMenu && (
               <motion.div
-                className="absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-df-border shadow-xl p-2 z-50"
+                className="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-slate-200 shadow-xl p-2 z-50"
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
               >
-                <div className="p-3 border-b border-df-border mb-1">
-                  <div className="font-semibold text-charcoal text-sm truncate">{userName}</div>
-                  <div className="text-xs text-zinc-grey truncate">{userEmail}</div>
-                  <div className="text-[10px] font-mono bg-lavender text-royal-purple px-1.5 py-0.5 rounded inline-block mt-1">
-                    {employeeId}
+                <div className="p-3 border-b border-slate-200 mb-1">
+                  <div className="font-bold text-slate-900 text-sm truncate">{userName}</div>
+                  <div className="text-xs text-slate-500 truncate">{userEmail}</div>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-[10px] font-mono bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">
+                      {employeeId}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                      {userRole}
+                    </span>
                   </div>
                 </div>
 
                 <Link
                   href={isAdmin ? '/admin/dashboard' : '/profile'}
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-charcoal hover:bg-mist-grey rounded-xl transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
                   onClick={() => setShowProfileMenu(false)}
                 >
-                  <User className="w-4 h-4 text-zinc-grey" />
+                  <User className="w-4 h-4 text-slate-500" />
                   <span>My Profile</span>
                 </Link>
 
+                {['ADMIN', 'HR_OFFICER'].includes(userRole) && (
+                  <Link
+                    href="/admin/dashboard"
+                    className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-purple-700 hover:bg-purple-50 rounded-xl transition-colors"
+                    onClick={() => setShowProfileMenu(false)}
+                  >
+                    <ShieldCheck className="w-4 h-4 text-purple-600" />
+                    <span>Management Console</span>
+                  </Link>
+                )}
+
                 <Link
                   href={isAdmin ? '/admin/settings' : '/settings'}
-                  className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-charcoal hover:bg-mist-grey rounded-xl transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
                   onClick={() => setShowProfileMenu(false)}
                 >
-                  <Settings className="w-4 h-4 text-zinc-grey" />
+                  <Settings className="w-4 h-4 text-slate-500" />
                   <span>Settings</span>
                 </Link>
 
-                <div className="border-t border-df-border my-1" />
+                <div className="border-t border-slate-200 my-1" />
 
                 <button
                   onClick={() => signOut({ callbackUrl: '/sign-in' })}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                 >
                   <LogOut className="w-4 h-4 text-red-600" />
                   <span>Log out</span>

@@ -3,8 +3,89 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  HR_OFFICER
+  EMPLOYEE
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  ON_PROBATION
+  TERMINATED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  HALF_DAY
+  ON_LEAVE
+  WEEKEND
+  HOLIDAY
+  NOT_MARKED
+}
+
+enum LeaveType {
+  PAID
+  SICK
+  UNPAID
+  CASUAL
+  MATERNITY
+  PATERNITY
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PayrollStatus {
+  DRAFT
+  PROCESSED
+  PAID
+}
+
+enum OTPPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum NotificationType {
+  EMAIL_VERIFIED
+  ATTENDANCE_MARKED
+  LEAVE_SUBMITTED
+  LEAVE_APPROVED
+  LEAVE_REJECTED
+  SALARY_GENERATED
+  PROFILE_UPDATED
+  SECURITY_EVENT
+  SYSTEM
+}
+
+enum DocumentType {
+  OFFER_LETTER
+  CONTRACT
+  ID_PROOF
+  ADDRESS_PROOF
+  EDUCATIONAL
+  EXPERIENCE
+  SALARY_SLIP
+  OTHER
 }
 
 model User {
@@ -12,7 +93,7 @@ model User {
   employeeId        String           @unique
   email             String           @unique
   password          String
-  role              String           @default("EMPLOYEE")
+  role              UserRole         @default(EMPLOYEE)
   isEmailVerified   Boolean          @default(false)
   isActive          Boolean          @default(true)
   createdAt         DateTime         @default(now())
@@ -51,9 +132,9 @@ model EmployeeProfile {
   departmentId       String?
   designationId      String?
   joiningDate        DateTime?
-  employmentType     String           @default("FULL_TIME")
+  employmentType     EmploymentType   @default(FULL_TIME)
   reportingManagerId String?
-  status             String           @default("ACTIVE")
+  status             EmployeeStatus   @default(ACTIVE)
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 
@@ -99,7 +180,7 @@ model AttendanceRecord {
   checkIn      DateTime?
   checkOut     DateTime?
   workingHours Float?
-  status       String           @default("NOT_MARKED")
+  status       AttendanceStatus @default(NOT_MARKED)
   notes        String?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
@@ -115,13 +196,13 @@ model AttendanceRecord {
 model LeaveRequest {
   id            String      @id @default(cuid())
   userId        String
-  leaveType     String      @default("PAID")
+  leaveType     LeaveType   @default(PAID)
   startDate     DateTime
   endDate       DateTime
   totalDays     Int
   reason        String
   attachment    String?
-  status        String      @default("PENDING")
+  status        LeaveStatus @default(PENDING)
   reviewedById  String?
   reviewComment String?
   reviewedAt    DateTime?
@@ -185,7 +266,7 @@ model PayrollRecord {
   netSalary     Float
   workingDays   Int           @default(26)
   presentDays   Int           @default(26)
-  status        String        @default("DRAFT")
+  status        PayrollStatus @default(DRAFT)
   generatedById String?
   generatedAt   DateTime      @default(now())
   paidAt        DateTime?
@@ -205,7 +286,7 @@ model SalarySlip {
   id          String        @id @default(cuid())
   payrollId   String        @unique
   userId      String
-  slipData    String
+  slipData    Json
   generatedAt DateTime      @default(now())
 
   payroll PayrollRecord @relation(fields: [payrollId], references: [id], onDelete: Cascade)
@@ -217,7 +298,7 @@ model Document {
   id           String       @id @default(cuid())
   userId       String
   name         String
-  type         String       @default("OTHER")
+  type         DocumentType @default(OTHER)
   url          String
   uploadedById String
   isPublic     Boolean      @default(false)
@@ -236,7 +317,7 @@ model Notification {
   userId            String
   title             String
   message           String
-  type              String           @default("SYSTEM")
+  type              NotificationType @default(SYSTEM)
   isRead            Boolean          @default(false)
   relatedEntityId   String?
   relatedEntityType String?
@@ -252,7 +333,7 @@ model OTPVerification {
   id        String     @id @default(cuid())
   email     String
   otpHash   String
-  purpose   String
+  purpose   OTPPurpose
   expiresAt DateTime
   attempts  Int        @default(0)
   isUsed    Boolean    @default(false)
@@ -271,7 +352,7 @@ model AuditLog {
   action     String
   entityType String
   entityId   String?
-  metadata   String?
+  metadata   Json?
   ipAddress  String?
   userAgent  String?
   createdAt  DateTime @default(now())

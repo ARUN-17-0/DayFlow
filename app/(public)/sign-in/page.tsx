@@ -15,13 +15,14 @@ import { toast } from 'sonner'
 function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/my-day'
+  const callbackUrl = searchParams.get('callbackUrl')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -43,7 +44,18 @@ function SignInForm() {
       }
 
       toast.success('Welcome back to Dayflow!')
-      router.push(callbackUrl)
+      
+      // Determine destination based on email/role if callbackUrl not specified
+      let dest = callbackUrl
+      if (!dest || dest === '/my-day') {
+        if (data.email.includes('admin') || data.email.includes('hr@')) {
+          dest = '/admin/dashboard'
+        } else {
+          dest = '/my-day'
+        }
+      }
+
+      router.push(dest)
       router.refresh()
     } catch {
       toast.error('An error occurred during sign in')
@@ -51,9 +63,14 @@ function SignInForm() {
     }
   }
 
+  const setDemoUser = (email: string, pwd: string) => {
+    setValue('email', email)
+    setValue('password', pwd)
+  }
+
   return (
     <motion.div
-      className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 border border-df-border shadow-2xl shadow-purple-500/5"
+      className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 border border-slate-200 shadow-2xl shadow-purple-500/10"
       initial={{ opacity: 0, scale: 0.96, y: 15 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -63,57 +80,57 @@ function SignInForm() {
         <div className="flex justify-center mb-3">
           <DayflowLogo size="lg" />
         </div>
-        <h1 className="text-2xl font-bold text-charcoal">Welcome back!</h1>
-        <p className="text-xs text-zinc-grey mt-1">Sign in to continue to Dayflow</p>
+        <h1 className="text-2xl font-extrabold text-slate-900">Welcome back!</h1>
+        <p className="text-xs text-slate-500 font-medium mt-1">Sign in to continue to Dayflow</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Email */}
         <div>
-          <label className="block text-xs font-semibold text-charcoal mb-1.5">Work Email</label>
+          <label className="block text-xs font-bold text-slate-800 mb-1.5">Work Email</label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-zinc-grey absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               {...register('email')}
               type="email"
               placeholder="you@example.com"
-              className="w-full bg-mist-grey/60 text-sm text-charcoal placeholder:text-zinc-grey pl-10 pr-4 py-3 rounded-xl border border-df-border focus:outline-none focus:border-royal-purple focus:bg-white transition-all"
+              className="w-full bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-600 focus:bg-white transition-all font-medium"
             />
           </div>
           {errors.email && (
-            <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
+            <p className="text-xs text-red-600 font-semibold mt-1">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-semibold text-charcoal">Password</label>
+            <label className="text-xs font-bold text-slate-800">Password</label>
             <Link
               href="/forgot-password"
-              className="text-xs text-royal-purple font-medium hover:underline"
+              className="text-xs text-purple-700 font-bold hover:underline"
             >
               Forgot password?
             </Link>
           </div>
           <div className="relative">
-            <Lock className="w-4 h-4 text-zinc-grey absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
-              className="w-full bg-mist-grey/60 text-sm text-charcoal placeholder:text-zinc-grey pl-10 pr-10 py-3 rounded-xl border border-df-border focus:outline-none focus:border-royal-purple focus:bg-white transition-all"
+              className="w-full bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 pl-10 pr-10 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-600 focus:bg-white transition-all font-medium"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-grey hover:text-charcoal"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {errors.password && (
-            <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+            <p className="text-xs text-red-600 font-semibold mt-1">{errors.password.message}</p>
           )}
         </div>
 
@@ -121,7 +138,7 @@ function SignInForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-royal-purple text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-deep-violet transition-all duration-200 shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 text-sm disabled:opacity-50 mt-6"
+          className="w-full bg-purple-700 hover:bg-purple-800 text-white font-extrabold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-purple-600/25 flex items-center justify-center gap-2 text-sm disabled:opacity-50 mt-6"
         >
           {loading ? (
             <>
@@ -138,22 +155,42 @@ function SignInForm() {
       </form>
 
       {/* Demo Credentials Box */}
-      <div className="mt-6 p-3 rounded-xl bg-lavender/60 border border-purple-200 text-xs text-zinc-grey">
-        <div className="font-semibold text-royal-purple mb-1">Quick Demo Logins:</div>
-        <div className="flex justify-between items-center py-0.5">
-          <span>Admin:</span>
-          <span className="font-mono text-charcoal">admin@dayflow.io / Admin@123</span>
-        </div>
-        <div className="flex justify-between items-center py-0.5">
-          <span>Employee:</span>
-          <span className="font-mono text-charcoal">arun.karthik@dayflow.io / Employee@123</span>
+      <div className="mt-6 p-3.5 rounded-2xl bg-purple-50 border border-purple-200 text-xs">
+        <div className="font-extrabold text-purple-900 mb-2">Click to Quick Fill Demo Login:</div>
+        <div className="space-y-1.5">
+          <button
+            type="button"
+            onClick={() => setDemoUser('admin@dayflow.io', 'Admin@123')}
+            className="flex items-center justify-between w-full p-2 rounded-xl bg-white hover:bg-purple-100 border border-purple-200 transition-colors text-left"
+          >
+            <span className="font-bold text-purple-950">1. Admin Account:</span>
+            <span className="font-mono text-purple-900 font-semibold text-[11px]">admin@dayflow.io</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setDemoUser('hr@dayflow.io', 'HR@123')}
+            className="flex items-center justify-between w-full p-2 rounded-xl bg-white hover:bg-purple-100 border border-purple-200 transition-colors text-left"
+          >
+            <span className="font-bold text-purple-950">2. HR Officer:</span>
+            <span className="font-mono text-purple-900 font-semibold text-[11px]">hr@dayflow.io</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setDemoUser('arun.karthik@dayflow.io', 'Employee@123')}
+            className="flex items-center justify-between w-full p-2 rounded-xl bg-white hover:bg-purple-100 border border-purple-200 transition-colors text-left"
+          >
+            <span className="font-bold text-purple-950">3. Employee:</span>
+            <span className="font-mono text-purple-900 font-semibold text-[11px]">arun.karthik@dayflow.io</span>
+          </button>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="text-center mt-6 text-xs text-zinc-grey">
+      <div className="text-center mt-6 text-xs text-slate-600 font-medium">
         Don&apos;t have an account?{' '}
-        <Link href="/sign-up" className="text-royal-purple font-semibold hover:underline">
+        <Link href="/sign-up" className="text-purple-700 font-bold hover:underline">
           Create one
         </Link>
       </div>
@@ -163,7 +200,7 @@ function SignInForm() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<div className="text-center text-zinc-grey">Loading sign in...</div>}>
+    <Suspense fallback={<div className="text-center text-slate-500 font-bold p-8">Loading sign in...</div>}>
       <SignInForm />
     </Suspense>
   )
