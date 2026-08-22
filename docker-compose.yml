@@ -1,0 +1,38 @@
+﻿version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: dayflow-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dayflow
+      POSTGRES_PASSWORD: dayflow_secret
+      POSTGRES_DB: dayflow_db
+    volumes:
+      - dayflow-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dayflow -d dayflow_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dayflow-pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@dayflow.io
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+
+volumes:
+  dayflow-postgres-data:
+    driver: local

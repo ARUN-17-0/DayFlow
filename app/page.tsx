@@ -1,69 +1,66 @@
-import Image from "next/image";
+﻿import Link from 'next/link'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-gradient-to-br from-lavender via-white to-mist-grey flex items-center justify-center p-4">
+      <div className="text-center max-w-2xl mx-auto">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-royal-purple to-soft-violet flex items-center justify-center shadow-lg shadow-royal-purple/30">
+            <span className="text-white text-2xl font-bold">D</span>
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl font-bold text-charcoal">Dayflow</h1>
+            <p className="text-sm text-zinc-grey">HRMS Platform</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+
+        {/* Tagline */}
+        <p className="text-xl text-zinc-grey mb-2">Every workday, perfectly aligned.</p>
+        <p className="text-sm text-zinc-grey/70 mb-10">
+          Complete HR management — employees, attendance, leaves & payroll.
+        </p>
+
+        {/* CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/auth/login"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-royal-purple text-white font-semibold hover:bg-deep-violet transition-colors shadow-lg shadow-royal-purple/30"
+          >
+            Sign In to Dashboard
+          </Link>
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl border border-df-border bg-white text-charcoal font-semibold hover:bg-mist-grey transition-colors"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            View Docs
           </a>
         </div>
-      </main>
-    </div>
-  );
+
+        {/* Demo credentials */}
+        <div className="mt-12 p-6 rounded-2xl bg-white/70 border border-df-border backdrop-blur-sm text-left">
+          <h3 className="text-sm font-semibold text-charcoal mb-4">Demo Credentials</h3>
+          <div className="space-y-2 text-sm">
+            {[
+              { role: 'Admin', email: 'admin@dayflow.io', password: 'Admin@123' },
+              { role: 'HR Officer', email: 'hr@dayflow.io', password: 'HR@123' },
+              { role: 'Employee', email: 'arun.karthik@dayflow.io', password: 'Employee@123' },
+            ].map((cred) => (
+              <div key={cred.role} className="flex items-center justify-between p-2 rounded-lg hover:bg-mist-grey">
+                <span className="font-medium text-charcoal w-24">{cred.role}</span>
+                <span className="text-zinc-grey font-mono text-xs">{cred.email}</span>
+                <span className="text-royal-purple font-mono text-xs">{cred.password}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="mt-8 text-xs text-zinc-grey/50">
+          Dayflow HRMS — Phase 1 Foundation &copy; 2025
+        </p>
+      </div>
+    </main>
+  )
 }
