@@ -3,6 +3,10 @@ import { getAuthUser, requireAdmin, canAccessUser, apiError, apiSuccess, createA
 import { prisma } from '@/lib/db'
 import { updateEmployeeSchema, updateProfileSchema } from '@/lib/validations'
 
+export function generateStaticParams() {
+  return [{ id: 'demo' }]
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -4,7 +4,7 @@
  */
 
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth/options'
 import { prisma } from '@/lib/db'
 
 export type AuthUser = {
